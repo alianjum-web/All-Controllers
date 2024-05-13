@@ -45,10 +45,11 @@ const createPlaylist = asyncHandler(async (req, res) => {
         return res
             .status(200)
             .josn(
-                200,
+                new ApiResponse
+               ( 200,
                 playlist,
                 "Playlist is created successfully"
-
+)
             )
     } catch (error) {
         throw new ApiError(401, "Playlist do not fetched successfully")

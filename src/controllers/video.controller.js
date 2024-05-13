@@ -8,8 +8,8 @@ import { asyncHandler } from "../utils/asyncHandler.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.js"
 
 
-const isUserOwner = async (videId, req) => {
-    const video = await Video.findById(videId)
+const isUserOwner = async (videoId, req) => {
+    const video = await Video.findById(videoId)
 
     if(video?.owner !== req.user?._id) {
         return false
@@ -228,16 +228,16 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
           throw new ApiError(401, "video is required!!")
       }
   
-      video.Published = !video.Published;
+      video.isPublished = !video.isPublished;
       await video.save()
       
       return res
       .status(200)
-      .json(
+      .json(new ApiResponse(
           200,
           video,
           "PublishedStatus of the video is toggled successfully"
-      )
+      ))
   } catch (error) {
     throw new ApiError(402, "Internal server error while toggling the video")
   }
