@@ -78,7 +78,7 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
         const user = await User.findById(userId)
 
         if (!user) {
-            throw new ApiError(400, 'Failed to find user')
+            throw new ApiError(400, "Failed to find user")
         }
 
         const playlist = await Playlist.aggregate([
@@ -101,7 +101,7 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
                             else: {
                                 $filter: {
                                     input: "$videos",
-                                    as: video,
+                                    as: "video",
                                     $cond: {
                                         $eq: { "$owner.isPublished": true }
 
@@ -289,13 +289,13 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
     }
 
     if (!video.isPublished) {
-        const videoRemovedFromPlaylist = await Video.updateOne(
+        const videoRemovedFromPlaylist = await Playlist.updateOne(
             {
-                _id: new mongoose.Types.ObjectId.createFormHexString(playlistId)
+                _id: mongoose.Types.ObjectId.createFormHexString(playlistId)
             },
             {
                 $pull: {
-                    videos: videoId
+                    videos: mongoose.Types.ObjectId.createFormHexString(videoId)
                 }
             }
         )
@@ -317,7 +317,7 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
         },
         {
             $pull: {
-                video: videoId
+                videos: videoId
             }
         }
     )
@@ -360,6 +360,7 @@ const deletePlaylist = asyncHandler(async (req, res) => {
     } catch (error) {
         throw new ApiError(400, "Video is unable to delete")
     }
+    
 
 })
 
@@ -400,7 +401,7 @@ const updatePlaylist = asyncHandler(async (req, res) => {
             {new: true}
         );
     
-        if (!updatePlaylist) {
+        if (!updatedPlaylist) {
             throw new ApiError(500, "Video is unable to update")
         }
     

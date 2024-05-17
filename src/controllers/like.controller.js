@@ -26,7 +26,7 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
             throw new ApiError(400, "videoId is required")
         }
         const video = await Video.findOne(videoId)
-        if (!video || (video.owner.toString !== req.user?._id && !video.isPublished)) {
+        if (!video || (video.owner.toString() !== req.user?._id && !video.isPublished)) {
             throw new ApiError(400, "Video is not found")
         }
         const likedCriteria = { video: videoId, likedBy: req.user?._id }
@@ -169,7 +169,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
         const likedVideos = await Like.aggregate([
             {
                 $match: {
-                    likedBy: new mongoose.Types.ObjectId.createFromHexString(userId)
+                    likedBy:  mongoose.Types.ObjectId.createFromHexString(userId)
                 }
             },
             {
@@ -315,6 +315,7 @@ Certainly! Let's break down the working of the aggregation pipeline in the provi
        - `owner`: An object containing owner details (username, avatar, and fullName).
 
 10. **`$group` Stage**:
+
     - Groups all documents into a single document (since `_id` is set to `null`).
     - Creates an array of liked videos with the alias `"likedVideos"`.
 

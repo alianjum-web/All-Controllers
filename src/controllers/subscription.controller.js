@@ -33,6 +33,7 @@ const toggleSubscription = asyncHandler(async (req, res) => {
                 throw new ApiError(400, "Error while subscribing")
             }
             return res
+
             .status(200)
             .json(
                 new ApiResponse(200, newSubcription, "User subscribed successfully")
@@ -71,7 +72,7 @@ const toggleSubscription = asyncHandler(async (req, res) => {
 const getUserChannelSubscribers = asyncHandler(async (req, res) => {
     const {channelId} = req.params
     /*
-    1.check for the subscriberId
+    1.check for the channelId
     2.$match on the basis of it
     3.group the document by giving _id to $channel
     4. $push the subscrbers
@@ -85,18 +86,20 @@ try {
        }
        const subscribers = await Subscription.aggregate([{
         $match: {
-            channel: new mongoose.Types.ObjectId.createFromHexString(channelId)
+            channel:  mongoose.Types.ObjectId.createFromHexString(channelId)
         },
        },
        {
-        $group: { //
+        $group: { 
             _id: "$channel",  // Group by the channel field
             subscribers: {$push: "$subscriber"}  //// Collect subscribers for each channel
         }
        },
        {
+       $project: {
         _id: 0,
         subscribers: 1
+       }
        }
     ])
     
@@ -140,7 +143,7 @@ try {
                 }
             },{
                 $group: { // gorup by channel because subscribed different channel
-                    _id: "$channel",
+                    _id: "$subscriber",
                     subscribedChannels: {$push: "$channel"}
                 }
             },

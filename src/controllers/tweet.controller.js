@@ -113,7 +113,7 @@ const updateTweet = asyncHandler(async (req, res) => {
             tweetId,
             {
                 $set: {
-                    content: "$tweetContent"
+                    content: tweetContent
                 }
             },{new: true}
         )
